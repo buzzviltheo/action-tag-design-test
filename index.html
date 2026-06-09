@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>액션형 광고 카드 태그 디자인</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&family=Inter:wght@400;600;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0a; --surface:#18181b; --elevated:#27272a;
+    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
+    --fg:#f4f4f5; --muted:#a1a1aa; --accent:#EF4444;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font-family:'Noto Sans KR','Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:clamp(2rem,5vw,5rem) clamp(1.2rem,4vw,3rem)}
+  .kicker{font-family:'Anonymous Pro',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--accent);margin-bottom:14px}
+  h1{font-family:'Inter','Noto Sans KR',sans-serif;font-weight:800;font-size:clamp(2rem,4.5vw,3.2rem);letter-spacing:-0.03em;line-height:1.1}
+  h2{font-family:'Inter','Noto Sans KR',sans-serif;font-weight:800;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:-0.02em;margin-bottom:8px}
+  .lead{color:var(--muted);font-size:1.05rem;max-width:660px;margin-top:18px}
+  section{margin-top:clamp(3.5rem,8vw,6rem)}
+  .mark{width:34px;height:auto;opacity:0.9;margin-bottom:28px}
+  .sec-no{font-family:'Anonymous Pro',monospace;font-size:0.7rem;color:var(--accent);letter-spacing:0.1em}
+  .divider{height:2px;width:48px;background:var(--accent);margin:14px 0 36px}
+
+  .spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:720px){.spec-grid{grid-template-columns:1fr}}
+  .spec{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px}
+  .spec .role{font-family:'Anonymous Pro',monospace;font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
+  .spec h3{font-size:1.25rem;font-weight:700;margin:6px 0 4px;font-family:'Inter','Noto Sans KR',sans-serif}
+  .spec .desc{color:var(--muted);font-size:0.92rem;margin-bottom:20px}
+  .spec ul{list-style:none;font-size:0.88rem;color:var(--muted)}
+  .spec li{padding:7px 0;border-top:1px solid var(--border);display:flex;gap:8px}
+  .spec li b{color:var(--fg);font-weight:600;min-width:54px;display:inline-block}
+  .preview-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;align-items:center}
+
+  /* 광고성 — 행동 후킹: 솔리드 채움, 브랜드 레드, subtitle 라인 */
+  .tag-action{display:inline-flex;align-items:center;background:#FEE2E2;color:#DC2626;font-weight:600;font-size:11px;line-height:1;letter-spacing:-0.01em;padding:4px 7px;border-radius:5px;white-space:nowrap;font-family:'Noto Sans KR','Inter',sans-serif}
+  /* 정보성 — 아웃라인 + 아이콘, 뉴트럴 (썸네일 코너) */
+  .tag-info{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,0.94);color:#3f3f46;border:1px solid rgba(0,0,0,0.06);font-weight:600;font-size:10.5px;line-height:1;padding:3px 7px 3px 5px;border-radius:6px;white-space:nowrap;font-family:'Noto Sans KR','Inter',sans-serif;box-shadow:0 1px 3px rgba(0,0,0,0.18);backdrop-filter:blur(3px)}
+  .tag-info svg{width:11px;height:11px;flex-shrink:0}
+  .tag-info.plain{background:transparent;color:#525252;border:1px solid #D4D4D4;box-shadow:none;backdrop-filter:none} /* 명세 미리보기용 */
+
+  .tag-hash{display:inline-flex;align-items:center;background:#EEF2FF;color:#4338CA;font-weight:500;font-size:11px;line-height:1;padding:4px 6px;border-radius:4px;font-family:'Noto Sans KR',sans-serif}
+  .tag-hash.c2{background:#DCFCE7;color:#15803D}
+  .tag-hash.c3{background:#FEF3C7;color:#B45309}
+
+  .device-label{font-family:'Anonymous Pro',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-left:2px}
+  .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:720px){.card-grid{grid-template-columns:1fr}}
+
+  .ad-card{background:#fff;border:1px solid #ededed;border-radius:14px;overflow:hidden}
+  .ad-card.dark{background:#222226;border-color:rgba(255,255,255,0.08)}
+  .ad-thumb{position:relative;height:104px;background:linear-gradient(135deg,#fecaca,#fda4a4)}
+  .ad-thumb.t2{background:linear-gradient(135deg,#bfdbfe,#a5b4fc)}
+  .ad-thumb.t3{background:linear-gradient(135deg,#bbf7d0,#86efac)}
+  .ad-thumb.t4{background:linear-gradient(135deg,#fde68a,#fdba74)}
+  /* 정보성 코너 배지 */
+  .thumb-badge{position:absolute;top:8px;left:8px}
+  .ad-body{padding:11px 12px 12px}
+  .ad-title{font-size:0.9rem;font-weight:700;color:#18181b;line-height:1.3;font-family:'Noto Sans KR',sans-serif}
+  .ad-card.dark .ad-title{color:#f4f4f5}
+  .ad-sub{display:flex;align-items:center;gap:5px;margin-top:6px;min-height:18px}
+  .ad-sub .txt{font-size:0.78rem;color:#9ca3af;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Noto Sans KR',sans-serif}
+  .ad-cta{margin-top:11px;display:flex;justify-content:flex-end}
+  .ad-cta .btn{background:#fff0f0;color:#EF4444;font-weight:700;font-size:0.8rem;padding:6px 13px;border-radius:8px;font-family:'Inter','Noto Sans KR',sans-serif}
+  .ad-card.dark .ad-cta .btn{background:rgba(239,68,68,0.16);color:#F87171}
+
+  .ad-list{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #ededed;border-radius:14px;padding:11px}
+  .ad-list .thumb{position:relative;width:54px;height:54px;border-radius:11px;flex-shrink:0;overflow:hidden;background:linear-gradient(135deg,#bfdbfe,#a5b4fc)}
+  .ad-list .thumb .thumb-badge{top:4px;left:4px}
+  .ad-list .info{flex:1;min-width:0}
+  .ad-list .info .ad-title{font-size:0.88rem}
+  .ad-list .btn{background:#fff0f0;color:#EF4444;font-weight:700;font-size:0.78rem;padding:6px 12px;border-radius:8px;white-space:nowrap;font-family:'Inter','Noto Sans KR',sans-serif}
+  /* 리스트 코너 배지는 더 작게 */
+  .ad-list .tag-info{font-size:9px;padding:2px 4px 2px 3px;gap:2px;border-radius:5px}
+  .ad-list .tag-info svg{width:9px;height:9px}
+
+  .note{background:var(--surface);border:1px solid var(--border);border-left:2px solid var(--accent);border-radius:10px;padding:16px 20px;font-size:0.92rem;color:var(--muted);margin-top:14px}
+  .note b{color:var(--fg);font-weight:600}
+  .principle{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:720px){.principle{grid-template-columns:1fr}}
+  .principle .p{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px}
+  .principle .p .n{font-family:'Anonymous Pro',monospace;color:var(--accent);font-size:0.9rem}
+  .principle .p h4{font-size:1rem;font-weight:700;margin:8px 0 6px;font-family:'Inter','Noto Sans KR',sans-serif}
+  .principle .p p{font-size:0.86rem;color:var(--muted)}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:720px){.compare{grid-template-columns:1fr}}
+  .compare .col{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px}
+  .compare .col.bad{border-color:rgba(239,68,68,0.25)}
+  .compare .tagname{font-family:'Anonymous Pro',monospace;font-size:0.66rem;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px}
+  .compare .bad .tagname{color:#f87171}
+  .compare .good .tagname{color:#4ade80}
+  footer{margin-top:6rem;padding-top:2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.82rem}
+  code{font-family:'Anonymous Pro',monospace;background:var(--elevated);padding:1px 5px;border-radius:4px;font-size:0.85em;color:#e4e4e7}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <svg class="mark" viewBox="0 0 1395 887" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M41.8181 230.081L-7.62572e-05 377.903L295.324 346.128L215.926 619.116C174.403 761.879 290.773 901.214 438.649 885.796L1171.68 809.366C1256.57 800.516 1327.58 741.026 1351.17 659.009L1394.38 508.743L1100.92 538.649L1178.46 266.811C1219.16 124.147 1102.65 -14.409 955.116 1.20647L221.222 78.8856C136.144 87.8907 65.1067 147.758 41.8181 230.081ZM887.842 282.577L588.779 314.352L506.537 604.069L803.731 572.294L887.842 282.577Z" fill="white"/></svg>
+    <div class="kicker">Action Ad Card · Tag Design</div>
+    <h1>액션형 광고 카드 태그</h1>
+    <p class="lead">광고가 요구하는 <b style="color:var(--fg)">행동 태그</b>와 광고의 <b style="color:var(--fg)">성격을 알리는 정보성 표기</b>를 <b style="color:var(--fg)">위치까지 분리</b>해 한눈에 구분합니다. 정보성은 썸네일 코너(광고 속성), 행동 태그는 텍스트 라인(참여 방법). 카드당 절제해서 노출해 노이즈를 줄입니다.</p>
+  </header>
+
+  <!-- 1. 두 종류 -->
+  <section>
+    <div class="sec-no">01 — 태그는 두 종류, 자리도 다르다</div>
+    <div class="divider"></div>
+    <div class="spec-grid">
+      <div class="spec">
+        <div class="role">광고성 · Action</div>
+        <h3>행동 후킹 태그</h3>
+        <p class="desc">유저가 무엇을 하면 보상받는지. 참여 방법 안내 → <b style="color:var(--fg)">텍스트(subtitle) 라인</b>.</p>
+        <div class="preview-row">
+          <span class="tag-action">설치하면</span>
+          <span class="tag-action">사면 적립</span>
+          <span class="tag-action">간편가입</span>
+          <span class="tag-action">플레이만</span>
+          <span class="tag-action">간편조회</span>
+        </div>
+        <ul>
+          <li><b>위치</b> 텍스트 라인 (참여 방법 자리)</li>
+          <li><b>색</b> 브랜드 레드 — 행동 유도 강조</li>
+          <li><b>형태</b> 솔리드 채움</li>
+          <li><b>부여</b> 라인아이템별 데이터 매핑</li>
+        </ul>
+      </div>
+      <div class="spec">
+        <div class="role">정보성 · Info</div>
+        <h3>정보성 표기</h3>
+        <p class="desc">광고 성격을 알리는 속성. 행동 유도가 아닌 안내 → <b style="color:var(--fg)">썸네일 코너</b>.</p>
+        <div class="preview-row">
+          <span class="tag-info plain"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19 9.5H12.5L13 2Z" fill="#737373"/></svg>선착순</span>
+          <span class="tag-info plain"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="14" width="4" height="7" rx="1" fill="#737373"/><rect x="10" y="9" width="4" height="12" rx="1" fill="#737373"/><rect x="17" y="4" width="4" height="17" rx="1" fill="#737373"/></svg>할수록 적립</span>
+        </div>
+        <ul>
+          <li><b>위치</b> 썸네일 코너 (광고 속성 자리)</li>
+          <li><b>색</b> 뉴트럴 — 차분한 보조</li>
+          <li><b>형태</b> 반투명 칩 + 아이콘</li>
+          <li><b>부여</b> 매핑 안 함 · category 런타임 식별</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note"><b>위치 + 색 + 형태 + 아이콘</b>으로 구분합니다. 같은 자리에서 색만 다르던 기존 방식과 달리, <b>정보성은 썸네일·행동은 텍스트</b>로 역할이 자리에서 드러나 한 광고에 둘 다 있어도(선착순 + 사면 적립) 부딪히지 않습니다.</div>
+  </section>
+
+  <!-- 2. 현재 vs 개선 -->
+  <section>
+    <div class="sec-no">02 — 현재 방식의 문제</div>
+    <div class="divider"></div>
+    <div class="compare">
+      <div class="col bad">
+        <div class="tagname">현재 — 해시 8색, 같은 자리</div>
+        <div class="preview-row">
+          <span class="tag-hash">선착순</span>
+          <span class="tag-hash c2">설치하면</span>
+          <span class="tag-hash c3">멀티미션!</span>
+        </div>
+        <p style="font-size:0.88rem;color:var(--muted)">대괄호 텍스트를 글자 해시로 색만 칠해 같은 자리에 표시합니다. <b style="color:var(--fg)">색과 의미가 연결되지 않고</b> 종류 구분도 위치 구분도 없어, 유저는 무엇이 행동이고 무엇이 정보인지 알 수 없습니다.</p>
+      </div>
+      <div class="col good">
+        <div class="tagname">개선 — 의미 기반, 자리 분리</div>
+        <div class="preview-row">
+          <span class="tag-info plain"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19 9.5H12.5L13 2Z" fill="#737373"/></svg>선착순 <span style="font-size:9px;color:#a1a1aa">(썸네일)</span></span>
+          <span class="tag-action">설치하면 <span style="font-size:9px;color:#fca5a5">(텍스트)</span></span>
+        </div>
+        <p style="font-size:0.88rem;color:var(--muted)">정보성은 썸네일 코너, 행동은 텍스트 라인. <b style="color:var(--fg)">자리가 역할을 말합니다.</b> 종류가 둘뿐이라 카드가 정돈됩니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 실제 카드 -->
+  <section>
+    <div class="sec-no">03 — 실제 카드 적용</div>
+    <div class="divider"></div>
+    <h2>라이트 카드</h2>
+    <p style="color:var(--muted);font-size:0.92rem;margin-bottom:24px">정보성은 썸네일 코너, 행동 태그는 subtitle 텍스트 앞. 포인트허브 4개 카드 컴포넌트 기준.</p>
+
+    <div class="card-grid">
+      <!-- 행동 태그 (텍스트 라인) -->
+      <div>
+        <div class="device-label">CardAd — 행동 태그 (텍스트)</div>
+        <div class="ad-card">
+          <div class="ad-thumb"></div>
+          <div class="ad-body">
+            <div class="ad-title">사람인 — 채용 공고 앱</div>
+            <div class="ad-sub"><span class="tag-action">간편가입</span><span class="txt">가입하고 포인트 받기</span></div>
+            <div class="ad-cta"><span class="btn">1,000P</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 정보성 (썸네일 코너) -->
+      <div>
+        <div class="device-label">CardAd — 정보성 (썸네일 코너)</div>
+        <div class="ad-card">
+          <div class="ad-thumb t3">
+            <span class="thumb-badge tag-info"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="14" width="4" height="7" rx="1" fill="#3f3f46"/><rect x="10" y="9" width="4" height="12" rx="1" fill="#3f3f46"/><rect x="17" y="4" width="4" height="17" rx="1" fill="#3f3f46"/></svg>할수록 적립</span>
+          </div>
+          <div class="ad-body">
+            <div class="ad-title">로얄매치</div>
+            <div class="ad-sub"><span class="txt">미션 깰수록 리워드</span></div>
+            <div class="ad-cta"><span class="btn">최대 5,000P</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:18px"></div>
+
+    <div class="device-label">ListAd — 정보성(썸네일 코너) / 행동(텍스트)</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="ad-list">
+        <div class="thumb"><span class="thumb-badge tag-info"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19 9.5H12.5L13 2Z" fill="#3f3f46"/></svg>선착순</span></div>
+        <div class="info">
+          <div class="ad-title">네이버 스마트스토어 찜하기</div>
+          <div class="ad-sub"><span class="txt">찜하고 적립받기</span></div>
+        </div>
+        <span class="btn">300P</span>
+      </div>
+      <div class="ad-list">
+        <div class="thumb" style="background:linear-gradient(135deg,#fecaca,#fda4a4)"></div>
+        <div class="info">
+          <div class="ad-title">29CM 이구위크</div>
+          <div class="ad-sub"><span class="tag-action">사면 적립</span><span class="txt">구매하고 적립받기</span></div>
+        </div>
+        <span class="btn">2%</span>
+      </div>
+    </div>
+
+    <div style="height:18px"></div>
+
+    <!-- 둘 다 있는 카드 -->
+    <div class="device-label">정보성 + 행동 공존 — 자리가 달라 안 부딪침</div>
+    <div style="max-width:280px">
+      <div class="ad-card">
+        <div class="ad-thumb t2">
+          <span class="thumb-badge tag-info"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19 9.5H12.5L13 2Z" fill="#3f3f46"/></svg>선착순</span>
+        </div>
+        <div class="ad-body">
+          <div class="ad-title">올리브영 스마트스토어</div>
+          <div class="ad-sub"><span class="tag-action">사면 적립</span><span class="txt">구매하면 적립</span></div>
+          <div class="ad-cta"><span class="btn">3%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:32px"></div>
+    <h2>다크 카드</h2>
+    <p style="color:var(--muted);font-size:0.92rem;margin-bottom:24px">다크 매체에서는 정보성 코너 칩을 <code>반투명 검정</code> + 흰 텍스트로, 행동 태그는 <code>#F87171</code>로 명도만 조정.</p>
+    <div class="card-grid">
+      <div>
+        <div class="device-label">TwoColumnCardAd — 행동</div>
+        <div class="ad-card dark">
+          <div class="ad-thumb t4"></div>
+          <div class="ad-body">
+            <div class="ad-title">레알팜</div>
+            <div class="ad-sub"><span class="tag-action" style="background:rgba(239,68,68,0.16);color:#F87171">플레이만</span><span class="txt" style="color:#71717a">플레이하고 적립</span></div>
+            <div class="ad-cta"><span class="btn">3,000P</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="device-label">OneColumnCardAd — 정보성</div>
+        <div class="ad-card dark">
+          <div class="ad-thumb t2">
+            <span class="thumb-badge tag-info" style="background:rgba(0,0,0,0.6);color:#f4f4f5;border-color:rgba(255,255,255,0.12)"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19 9.5H12.5L13 2Z" fill="#f4f4f5"/></svg>선착순</span>
+          </div>
+          <div class="ad-body">
+            <div class="ad-title">올리브영 스토어 찜</div>
+            <div class="ad-sub"><span class="txt" style="color:#71717a">선착순 적립</span></div>
+            <div class="ad-cta"><span class="btn">500P</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 노출 원칙 -->
+  <section>
+    <div class="sec-no">04 — 노이즈를 줄이는 노출 원칙</div>
+    <div class="divider"></div>
+    <div class="principle">
+      <div class="p"><div class="n">01</div><h4>자리로 역할 분리</h4><p>정보성은 썸네일 코너, 행동은 텍스트 라인. 위치가 종류를 말해줘 색·형태에만 기대지 않습니다.</p></div>
+      <div class="p"><div class="n">02</div><h4>가속 소진만 노출</h4><p>행동 태그는 가속 소진(ASAP) 광고에만. 모든 카드에 붙으면 변별력이 사라지므로 절제.</p></div>
+      <div class="p"><div class="n">03</div><h4>대괄호 제거</h4><p>광고명의 <code>[대괄호]</code>는 모두 제거하고 깔끔한 광고명만. 태그는 우리 체계로 따로 표기.</p></div>
+    </div>
+  </section>
+
+  <!-- 5. 문구 원칙 (토스 UX라이팅 검토 반영) -->
+  <section>
+    <div class="sec-no">05 — 태그 문구 원칙</div>
+    <div class="divider"></div>
+    <p style="color:var(--muted);font-size:0.95rem;max-width:660px;margin-bottom:24px">태그는 5자 라벨이라 카피 전체 원칙을 다 담지 않습니다. <b style="color:var(--fg)">행동을 가볍게·쉬운 말로</b>가 태그의 몫이고, <b style="color:var(--fg)">확실한 보상·구체 숫자</b>는 CTA 버튼·부제목이 맡습니다.</p>
+    <div class="principle">
+      <div class="p"><div class="n">·</div><h4>행동을 가볍게</h4><p>"~하면·~만·보면"처럼 부담 낮은 동사. 무거운 행동(가입·상담·신청)은 "간편-" 톤으로.</p></div>
+      <div class="p"><div class="n">·</div><h4>쉬운 말로</h4><p>자주 쓰는 자연스러운 한국어. 억지 축약·외래어 지양. ("구경하면" 등)</p></div>
+      <div class="p"><div class="n">·</div><h4>보상은 버튼에</h4><p>금액·할인율·확실성은 태그가 아니라 CTA 버튼·부제목이 담당. 태그에 욱여넣지 않음.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    액션형 광고 카드 태그 디자인 · 버즈빌 디자인 시스템 적용 · 문구 검토: 토스애즈 UX라이팅 5원칙<br>
+    상위 정의: [PRD] 액션형 태그 체계 템플릿화 · 프론트 참고: pointhub-web buzzbenefit 광고 카드 컴포넌트
+  </footer>
+
+</div>
+</body>
+</html>
